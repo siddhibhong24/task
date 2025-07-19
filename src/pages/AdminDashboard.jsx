@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import Navbar from '../components/navbar'; 
+import CountUp from 'react-countup';
+import { useInView } from 'react-intersection-observer';
+
 import {
   Box,
   Typography,
@@ -21,14 +25,32 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 const dummyUsers = [
-  { name: 'Alice', email: 'alice@example.com', address: '123 Street', role: 'admin' },
-  { name: 'Bob', email: 'bob@example.com', address: '456 Avenue', role: 'normal' },
+  { name: 'Suresh Patil', email: 'suresh.patil@pune.com', address: 'Shivaji Nagar, Pune', role: 'admin' },
+  { name: 'Meera Joshi', email: 'meera.joshi@nagpur.com', address: 'Dharampeth, Nagpur', role: 'normal' },
+  { name: 'Rajesh Shinde', email: 'rajesh.shinde@kolhapur.com', address: 'Tarabai Road, Kolhapur', role: 'store_owner' },
+  { name: 'Asha Deshmukh', email: 'asha.deshmukh@nashik.com', address: 'Gangapur Road, Nashik', role: 'normal' },
+  { name: 'Amol Jadhav', email: 'amol.jadhav@thane.com', address: 'Ghodbunder Road, Thane', role: 'admin' },
+  { name: 'Sneha Kale', email: 'sneha.kale@solapur.com', address: 'Mangalwar Peth, Solapur', role: 'store_owner' },
+  { name: 'Vikas Pawar', email: 'vikas.pawar@aurangabad.com', address: 'CIDCO, Aurangabad', role: 'normal' },
+  { name: 'Prachi Bhosale', email: 'prachi.bhosale@satara.com', address: 'Rajwada, Satara', role: 'admin' },
+  { name: 'Nilesh Gaikwad', email: 'nilesh.gaikwad@nanded.com', address: 'Vazirabad, Nanded', role: 'store_owner' },
+  { name: 'Shraddha More', email: 'shraddha.more@nagpur.com', address: 'Sitabuldi, Nagpur', role: 'normal' },
 ];
 
+
 const dummyStores = [
-  { name: 'Store A', email: 'storea@example.com', address: 'Market Rd', rating: 4.2 },
-  { name: 'Store B', email: 'storeb@example.com', address: 'Main St', rating: 3.8 },
+  { name: 'Pune Supermart', email: 'contact@punesupermart.com', address: 'JM Road, Pune', rating: 4.5 },
+  { name: 'Nagpur Electronics', email: 'support@nagpurelectronics.com', address: 'Itwari Market, Nagpur', rating: 4.0 },
+  { name: 'Kolhapur Kirana', email: 'sales@kolhapurkirana.com', address: 'Shahu Market, Kolhapur', rating: 3.7 },
+  { name: 'Nashik Fresh', email: 'info@nashikfresh.com', address: 'Canada Corner, Nashik', rating: 4.3 },
+  { name: 'Thane Mega Store', email: 'contact@thanestore.com', address: 'Viviana Mall, Thane', rating: 4.1 },
+  { name: 'Solapur Daily Needs', email: 'help@solapurdaily.com', address: 'Hotgi Road, Solapur', rating: 3.9 },
+  { name: 'Aurangabad Bazar', email: 'aurangabad@bazar.com', address: 'Prozone Mall, Aurangabad', rating: 4.2 },
+  { name: 'Satara Spices', email: 'info@sataraspices.com', address: 'Main Market, Satara', rating: 3.8 },
+  { name: 'Nanded Mart', email: 'nanded@mart.com', address: 'Shivaji Chowk, Nanded', rating: 4.0 },
+  { name: 'Nagpur Grocery Hub', email: 'grocery@nagpurhub.com', address: 'Dharampeth Extension, Nagpur', rating: 4.4 },
 ];
+
 
 export default function AdminDashboard() {
   const [openUserModal, setOpenUserModal] = useState(false);
@@ -37,7 +59,10 @@ export default function AdminDashboard() {
   const [stores] = useState(dummyStores);
   const [filterText, setFilterText] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
-
+  const [ref, inView] = useInView({
+  triggerOnce: true,
+  threshold: 0.3,
+});
   const formikUser = useFormik({
     initialValues: { name: '', email: '', password: '', address: '', role: '' },
     validationSchema: Yup.object({
@@ -55,47 +80,46 @@ export default function AdminDashboard() {
   });
 
   return (
-    <Box p={4} fontFamily="'Segoe UI', sans-serif" minHeight="100vh">
-     
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={10}>
-        <Typography variant="h5" fontWeight="bold">Admin Dashboard</Typography>
-        <Box display="flex" alignItems="center" gap={2}>
-          <Typography fontWeight="500"> Admin</Typography>
-          <Button variant="outlined" color="error">Logout</Button>
-        </Box>
-      </Box>
-
-      <Typography variant="h3" fontWeight="bold" textAlign="center" mb={3}>
+    <Box p={4} fontFamily="'Segoe UI', sans-serif"  minHeight="100vh">
+      <Navbar /> 
+        <Typography variant="h3" fontWeight="bold" textAlign="center" mb={3}>
         Store Rating System
       </Typography>
       <Typography variant="subtitle1" textAlign="center" mb={10} color="textSecondary">
         Manage users, stores, and performance ratings from a single interface.
       </Typography>
 
-      
-      <Grid container justifyContent="center" spacing={4} mb={10}>
+      {/* Summary Cards */}
+      <Grid container justifyContent="center" spacing={4} mb={10} ref={ref}>
         <Grid item xs={12} sm={6} md={3}>
-          <Paper elevation={4} sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
-            <Typography variant="h6" gutterBottom fontWeight="500">Total Users</Typography>
-            <Typography variant="h4" color="primary">{users.length}</Typography>
-          </Paper>
-        </Grid>
+  <Paper elevation={4} sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
+    <Typography variant="h6" gutterBottom fontWeight="500">Total Users</Typography>
+    <Typography variant="h4" color="primary">
+      {inView ? <CountUp end={users.length} duration={1} /> : users.length}
+    </Typography>
+  </Paper>
+</Grid>
+
         <Grid item xs={12} sm={6} md={3}>
-          <Paper elevation={4} sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
-            <Typography variant="h6" gutterBottom fontWeight="500">Total Stores</Typography>
-            <Typography variant="h4" color="secondary">{stores.length}</Typography>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Paper elevation={4} sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
-            <Typography variant="h6" gutterBottom fontWeight="500">Total Ratings</Typography>
-            <Typography variant="h4" color="success.main">24</Typography>
-          </Paper>
-        </Grid>
+    <Paper elevation={4} sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
+      <Typography variant="h6" gutterBottom fontWeight="500">Total Stores</Typography>
+      <Typography variant="h4" color="secondary">
+        {inView ? <CountUp end={stores.length} duration={1} /> : stores.length}
+      </Typography>
+    </Paper>
+  </Grid>
+         <Grid item xs={12} sm={6} md={3}>
+    <Paper elevation={4} sx={{ p: 4, textAlign: 'center', borderRadius: 3 }}>
+      <Typography variant="h6" gutterBottom fontWeight="500">Total Ratings</Typography>
+      <Typography variant="h4" color="success.main">
+        {inView ? <CountUp end={24} duration={1} /> : 24}
+      </Typography>
+    </Paper>
+  </Grid>
       </Grid>
 
-      
-      <Box mb={4} mt={2} textAlign="center">
+      {/* Action Buttons */}
+      <Box mb={15} mt={2} textAlign="center">
         <Button variant="contained" color="primary" onClick={() => setOpenUserModal(true)} sx={{ mr: 2 }}>
           + Add User
         </Button>
@@ -104,7 +128,7 @@ export default function AdminDashboard() {
         </Button>
       </Box>
 
-  
+      {/* Filters */}
       <Box display="flex" gap={2} mb={4} mt={2} alignItems="center">
         <TextField
           label="Search by name/email/address"
@@ -123,7 +147,7 @@ export default function AdminDashboard() {
         </FormControl>
       </Box>
 
-     
+      {/* Users Table */}
       <Typography variant="h5" mt={10} mb={3}>User Management</Typography>
       <Table>
         <TableHead>
@@ -151,7 +175,7 @@ export default function AdminDashboard() {
         </TableBody>
       </Table>
 
-   
+      {/* Stores Table */}
       <Typography variant="h5" mt={6} mb={3}>Stores Overview</Typography>
       <Table>
         <TableHead>
@@ -178,7 +202,7 @@ export default function AdminDashboard() {
         </TableBody>
       </Table>
 
- 
+      {/* Add User Modal */}
       <Modal open={openUserModal} onClose={() => setOpenUserModal(false)}>
         <Box sx={{ p: 4, backgroundColor: 'white', maxWidth: 400, m: '100px auto', borderRadius: 2 }}>
           <Typography variant="h6" mb={2}>Register New User</Typography>
@@ -200,7 +224,7 @@ export default function AdminDashboard() {
         </Box>
       </Modal>
 
-
+      {/* Add Store Modal */}
       <Modal open={openStoreModal} onClose={() => setOpenStoreModal(false)}>
         <Box sx={{ p: 4, backgroundColor: 'white', maxWidth: 400, m: '100px auto', borderRadius: 2 }}>
           <Typography variant="h6" mb={2}>Add New Store</Typography>
@@ -210,7 +234,7 @@ export default function AdminDashboard() {
           <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={() => setOpenStoreModal(false)}>Submit</Button>
         </Box>
       </Modal>
-      <Box component="footer" sx={{ py: 2, mt: 10, textAlign: 'center', borderTop: '1px solid #ccc' }}>
+      <Box component="footer" sx={{ py: 2, textAlign: 'center', borderTop: '1px solid #ccc' }}>
   <Typography variant="body2" color="textSecondary">
     © 2025 Store Rating System | Made with by Siddhi
   </Typography>
